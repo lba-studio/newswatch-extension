@@ -1,0 +1,47 @@
+{
+  "name": "newswatch-extension",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack",
+    "watch": "webpack --watch"
+  },
+  "author": "Benjamin Tanone",
+  "license": "ISC",
+  "devDependencies": {
+    "clean-webpack-plugin": "^3.0.0",
+    "copy-webpack-plugin": "^6.1.0",
+    "dotenv": "^8.2.0",
+    "generate-json-webpack-plugin": "^1.0.0",
+    "html-webpack-plugin": "^4.5.0",
+    "ts-loader": "^8.0.3",
+    "typescript": "^4.0.2",
+    "webpack": "^4.44.1",
+    "webpack-cli": "^3.3.12",
+    "webpack-extension-reloader": "^1.1.4"
+  },
+  "dependencies": {
+    "@material-ui/core": "^4.11.0",
+    "@material-ui/icons": "^4.9.1",
+    "@types/color": "^3.0.1",
+    "@types/lodash": "^4.14.161",
+    "@types/node": "^14.10.2",
+    "@types/react": "^16.9.50",
+    "@types/react-dom": "^16.9.8",
+    "@types/sentiment": "^5.0.0",
+    "@types/styled-components": "^5.1.3",
+    "aws-sdk": "^2.761.0",
+    "axios": "^0.20.0",
+    "color": "^3.1.3",
+    "lodash": "^4.17.20",
+    "natural": "^2.1.5",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "sentiment": "^5.0.2",
+    "styled-components": "^5.2.0",
+    "webextension-polyfill-ts": "^0.20.0"
+  }
+}
