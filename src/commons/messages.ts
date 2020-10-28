@@ -8,6 +8,7 @@ export const RECORD_ANALYTICS = "RECORD_ANALYTICS";
 export const STATE_CONNECT = "STATE_CONNECT";
 export const ANALYSE_TEXT_ERROR = "ANALYSE_TEXT_ERROR";
 export const PUSH_CONTENT_CONFIG = "CONTENT_PUSH_CONFIG";
+export const PAGE_HEARTBEAT = "PAGE_HEARTBEAT";
 export interface Action<T = any> {
   type: string;
   payload?: T;

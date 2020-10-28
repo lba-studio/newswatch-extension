@@ -6,6 +6,7 @@ import {
   ANALYSE_TEXT_ERROR,
   GRAB_AND_ANALYSE,
   INIT_ANALYSIS,
+  PAGE_HEARTBEAT,
   PUSH_CONTENT_CONFIG,
   STATE_CONNECT,
 } from "../commons/messages";
@@ -14,8 +15,10 @@ import computeColorHex from "../utils/computeColorHex";
 import Color from "color";
 import { TabState } from "../commons/typedefs";
 import TabStateManager from "./tabStateManager";
+import PageHeartbeatManager from "./heartbeatManager";
 
 const stateManager = new TabStateManager();
+const heartbeatManager = new PageHeartbeatManager();
 
 async function getActiveTabFromBrowserContext(): Promise<Tabs.Tab | undefined> {
   // chrome: returns undefined if you're on the popup context or in the devtool context
@@ -41,7 +44,6 @@ async function statefulMessageHandler(req: Action, sender: { tab?: Tabs.Tab }) {
   const currentTab = await getTab(sender, tabFallback);
   let isUnknownAction = false;
   if (currentTab?.id) {
-    console.debug("currentState", type, currentTab.id, stateManager);
     analytics.onAction(type);
     switch (type) {
       case INIT_ANALYSIS:
@@ -96,11 +98,13 @@ async function statefulMessageHandler(req: Action, sender: { tab?: Tabs.Tab }) {
       default:
         console.warn("No tab-handler for action", type, req);
       case GRAB_AND_ANALYSE:
+      case PAGE_HEARTBEAT:
         isUnknownAction = true;
         break;
     }
     if (!isUnknownAction) {
       // only commit known actions
+      console.debug("currentState", type, currentTab.id, stateManager);
       stateManager.setState(currentTab, { lastAction: type });
       stateManager.commitState(currentTab);
     }
@@ -110,7 +114,7 @@ async function statefulMessageHandler(req: Action, sender: { tab?: Tabs.Tab }) {
 }
 
 /**
- * @description used to send/propagate messages to content script
+ * @description used to send/propagate/receive messages from & to content script - stuff that doesn't depend on states
  */
 async function commandMessageHandlers(req: Action, sender: { tab?: Tabs.Tab }) {
   const { payload, type, tabFallback } = req;
@@ -123,6 +127,16 @@ async function commandMessageHandlers(req: Action, sender: { tab?: Tabs.Tab }) {
       await browser.tabs.sendMessage(currentTab.id, {
         type: GRAB_AND_ANALYSE,
       });
+      break;
+    case PAGE_HEARTBEAT:
+      if (typeof payload === "string") {
+        heartbeatManager.heartbeat(payload);
+      } else {
+        console.error(
+          `Unknown payload for ${PAGE_HEARTBEAT}. Skipping.`,
+          payload
+        );
+      }
       break;
     default:
       console.warn("No command handler for action type.", type);

@@ -17,3 +17,8 @@ export interface TabState {
 export interface ContentConfig {
   highlightSelectedText: boolean;
 }
+
+export interface AnalyticsData<T> {
+  [url: string]: T;
+}
+

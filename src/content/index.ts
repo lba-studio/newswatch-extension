@@ -10,8 +10,12 @@ import {
 import { ContentConfig, TabState } from "../commons/typedefs";
 import getMainTextBody, { ElementText } from "../utils/browser/getMainTextBody";
 import computeColorHex from "../utils/computeColorHex";
+import StatisticsManager from "./statisticsManager";
 
 const MIN_LENGTH = 1000;
+const statisticsManager = new StatisticsManager();
+
+statisticsManager.start();
 
 // listen to config changes
 let config: ContentConfig = {
