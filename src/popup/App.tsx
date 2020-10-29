@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
   },
   rootGrid: {
     padding: theme.spacing(2),
-    minWidth: 220,
+    minWidth: 320,
   },
 }));
 

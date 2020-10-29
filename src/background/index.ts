@@ -14,8 +14,8 @@ import analytics from "../utils/analytics";
 import computeColorHex from "../utils/computeColorHex";
 import Color from "color";
 import { TabState } from "../commons/typedefs";
-import TabStateManager from "./tabStateManager";
-import PageHeartbeatManager from "./heartbeatManager";
+import TabStateManager from "./TabStateManager";
+import PageHeartbeatManager from "./HeartbeatManager";
 
 const stateManager = new TabStateManager();
 const heartbeatManager = new PageHeartbeatManager();
