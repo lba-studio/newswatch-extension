@@ -1,16 +1,13 @@
-import { browser } from "webextension-polyfill-ts";
-import { AnalyticsData } from "../commons/typedefs";
-
-const TIME_SPENT_DATA_KEY = "TIME_SPENT_ON_SITE";
+import dayjs from "dayjs";
+import { Tabs } from "webextension-polyfill-ts";
+import timeSpentRepository, {
+  TimeSpentOnSiteData,
+} from "./repository/timeSpentRepository";
 
 type Hostname = string;
 
 interface Heartbeat {
   source: Hostname;
-}
-
-interface TimeSpentOnSiteData {
-  timeSpentSecond: number; // in seconds
 }
 
 /**
@@ -22,7 +19,10 @@ class PageHeartbeatManager {
 
   constructor(private readonly prettyName = "PageHeartbeatManager") {}
 
-  async heartbeat(pageHostname: string) {
+  async heartbeat(pageHostname: string, tab: Tabs.Tab) {
+    if (!tab.active) {
+      return;
+    }
     // strip the page url to the relevant domain
     this.heartbeatQueue.push({ source: pageHostname });
     this.startHandler();
@@ -34,10 +34,8 @@ class PageHeartbeatManager {
       if (this.isHandlerRunning) {
         return;
       }
-      const data: AnalyticsData<TimeSpentOnSiteData> =
-        (await browser.storage.local.get(TIME_SPENT_DATA_KEY))[
-          TIME_SPENT_DATA_KEY
-        ] || {};
+      const currentDate = new Date();
+      const data = await timeSpentRepository.getDataByDate(currentDate);
       this.isHandlerRunning = true;
       while (this.heartbeatQueue.length > 0) {
         heartbeatBeingHandled = this.heartbeatQueue.shift();
@@ -53,7 +51,7 @@ class PageHeartbeatManager {
         data[heartbeatBeingHandled.source] = dataForSite;
         // console.debug("Received heartbeat", heartbeatBeingHandled.source);
       }
-      await browser.storage.local.set({ [TIME_SPENT_DATA_KEY]: data });
+      timeSpentRepository.setDataByDate(currentDate, data);
     } catch (e) {
       console.error(`${this.prettyName} failed to unload queue.`, e);
       if (heartbeatBeingHandled) {

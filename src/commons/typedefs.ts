@@ -22,3 +22,4 @@ export interface AnalyticsData<T> {
   [url: string]: T;
 }
 
+export type Hostname = string;
