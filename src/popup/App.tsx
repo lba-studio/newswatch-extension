@@ -4,6 +4,7 @@ import {
   CircularProgress,
   Collapse,
   CssBaseline,
+  Divider,
   Grid,
   IconButton,
   LinearProgress,
@@ -32,13 +33,6 @@ import { TabState } from "../commons/typedefs";
 import ConfigContext from "./ConfigContext";
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    padding: theme.spacing(2),
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-  },
   rootGrid: {
     padding: theme.spacing(2),
     minWidth: 320,
@@ -103,7 +97,7 @@ export default function () {
         >
           <Grid
             container
-            spacing={1}
+            spacing={2}
             className={classes.rootGrid}
             alignItems="center"
             justify="center"
@@ -118,7 +112,7 @@ export default function () {
                 <Grid
                   container
                   item
-                  xs={4}
+                  xs={3}
                   justify="center"
                   alignItems="center"
                 >
@@ -127,10 +121,11 @@ export default function () {
                     htmlColor={computeColorHex(currentScore)}
                   />
                 </Grid>
-                <Grid item xs={4}>
+                <Grid item xs={6}>
                   <Typography
                     align="center"
                     style={{ color: computeColorHex(currentScore) }}
+                    variant="h6"
                   >
                     {getSentimentScoreLikertValue(currentScore)} (
                     {currentScore.toFixed(1)})
@@ -139,14 +134,14 @@ export default function () {
               </>
             )}
             {!currentScore && !isLoading && (
-              <Grid item xs={8}>
+              <Grid item xs={9}>
                 <Typography align="center" variant="h6">
                   No score
                 </Typography>
               </Grid>
             )}
             {!isLoading && (
-              <Grid item xs={4}>
+              <Grid container justify="center" item xs={3}>
                 <IconButton
                   color="primary"
                   aria-label="recalculate"
@@ -158,6 +153,9 @@ export default function () {
                 </IconButton>
               </Grid>
             )}
+            <Grid item xs={12}>
+              <Divider />
+            </Grid>
             <Grid item xs={12}>
               <Options />
             </Grid>

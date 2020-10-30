@@ -3,15 +3,27 @@ export const appTheme = responsiveFontSizes(
   createMuiTheme({
     typography: {
       h1: {
+        fontSize: 24,
         fontWeight: 700,
       },
       h2: {
+        fontSize: 22,
         fontWeight: 500,
       },
       h3: {
+        fontSize: 21,
         fontWeight: 400,
       },
-      body1: {
+      h4: {
+        fontSize: 20,
+      },
+      h5: {
+        fontSize: 18,
+      },
+      h6: {
+        fontSize: 16,
+      },
+      body2: {
         lineHeight: 1.5,
         marginBottom: "0.5rem",
       },

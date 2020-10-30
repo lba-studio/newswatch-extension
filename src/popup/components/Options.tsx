@@ -44,31 +44,33 @@ function Options() {
     [isLoading, contentConfig, configContext]
   );
   return (
-    <Grid container>
-      {!isLoading ? (
-        <>
-          <Grid item xs={8}>
-            <Typography>View analyzed text</Typography>
+    <>
+      <Grid container justify="center">
+        {!isLoading ? (
+          <>
+            <Grid container alignContent="center" item xs={9}>
+              <Typography>View analyzed text</Typography>
+            </Grid>
+            <Grid container justify="center" item xs={3}>
+              <Switch
+                color="primary"
+                checked={contentConfig.highlightSelectedText}
+                onChange={() =>
+                  updateContentConfig({
+                    highlightSelectedText: !contentConfig.highlightSelectedText,
+                  })
+                }
+                name="textHighlight"
+              />
+            </Grid>
+          </>
+        ) : (
+          <Grid item xs={12}>
+            <LinearProgress />
           </Grid>
-          <Grid item xs={4}>
-            <Switch
-              color="primary"
-              checked={contentConfig.highlightSelectedText}
-              onChange={() =>
-                updateContentConfig({
-                  highlightSelectedText: !contentConfig.highlightSelectedText,
-                })
-              }
-              name="textHighlight"
-            />
-          </Grid>
-        </>
-      ) : (
-        <Grid item xs={12}>
-          <LinearProgress />
-        </Grid>
-      )}
-    </Grid>
+        )}
+      </Grid>
+    </>
   );
 }
 
