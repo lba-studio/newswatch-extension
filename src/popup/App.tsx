@@ -31,6 +31,7 @@ import RefreshIcon from "@material-ui/icons/Refresh";
 import Options from "./components/Options";
 import { TabState } from "../commons/typedefs";
 import ConfigContext from "./ConfigContext";
+import StatisticsView from "./components/StatisticsView";
 
 const useStyles = makeStyles((theme) => ({
   rootGrid: {
@@ -153,6 +154,9 @@ export default function () {
                 </IconButton>
               </Grid>
             )}
+            <Grid item xs={12}>
+              <StatisticsView />
+            </Grid>
             <Grid item xs={12}>
               <Divider />
             </Grid>
