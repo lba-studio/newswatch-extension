@@ -51,8 +51,28 @@ async function getAllDataWithinRangeInclusive(
   return result;
 }
 
+function flattenMap(
+  map: Map<string, AnalyticsData<Partial<TimeSpentOnSiteData>>>
+): AnalyticsData<TimeSpentOnSiteData> {
+  let combinedValue: AnalyticsData<TimeSpentOnSiteData> = {};
+  map.forEach((dateEntry) => {
+    Object.keys(dateEntry).forEach((url) => {
+      if (!combinedValue[url]) {
+        combinedValue[url] = {
+          timeSpentSecond: 0,
+        };
+      }
+      combinedValue[url].timeSpentSecond =
+        (dateEntry[url]?.timeSpentSecond || 0) +
+        (combinedValue[url]?.timeSpentSecond || 0);
+    });
+  });
+  return combinedValue;
+}
+
 export default {
   getDataByDate,
   setDataByDate,
   getAllDataWithinRangeInclusive,
+  flattenMap,
 };
