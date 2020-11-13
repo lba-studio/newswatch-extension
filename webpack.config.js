@@ -10,27 +10,8 @@ const webpack = require("webpack");
 
 dotenv.config();
 
-module.exports = (env, argv) => ({
-  mode: "development",
-  entry: {
-    background: "./src/background/index.ts",
-    content: "./src/content/index.ts",
-    popup: "./src/popup/index.tsx",
-  },
-  module: {
-    rules: [
-      {
-        test: /\.tsx?$/,
-        use: "ts-loader",
-        exclude: /node_modules/,
-      },
-    ],
-  },
-  devtool: "inline-source-map",
-  resolve: {
-    extensions: [".tsx", ".ts", ".js"],
-  },
-  plugins: [
+module.exports = (env, argv) => {
+  const plugins = [
     new CleanWebpackPlugin({
       cleanAfterEveryBuildPatterns: ["!popup.html"],
     }),
@@ -70,21 +51,47 @@ module.exports = (env, argv) => ({
       },
       persistent: argv.mode !== "production",
     }),
-    /* @ts-ignore because the typings are incorrect */
-    new ExtensionReloader({
-      entries: {
-        contentScript: "content",
-        background: "background",
-      },
-    }),
     // TODO: DANGEROUS, make sure this is removed before publishing this project
     new webpack.EnvironmentPlugin([
       "AWS_ACCESS_KEY_ID",
       "AWS_SECRET_ACCESS_KEY",
     ]),
-  ],
-  output: {
-    filename: "[name].js",
-    path: path.resolve(__dirname, "dist"),
-  },
-});
+  ];
+  if (argv.mode !== "production") {
+    plugins.push(
+      /* @ts-ignore because the typings are incorrect */
+      new ExtensionReloader({
+        entries: {
+          contentScript: "content",
+          background: "background",
+        },
+      })
+    );
+  }
+  return {
+    mode: "development",
+    entry: {
+      background: "./src/background/index.ts",
+      content: "./src/content/index.ts",
+      popup: "./src/popup/index.tsx",
+    },
+    module: {
+      rules: [
+        {
+          test: /\.tsx?$/,
+          use: "ts-loader",
+          exclude: /node_modules/,
+        },
+      ],
+    },
+    devtool: "inline-source-map",
+    resolve: {
+      extensions: [".tsx", ".ts", ".js"],
+    },
+    plugins: plugins,
+    output: {
+      filename: "[name].js",
+      path: path.resolve(__dirname, "dist"),
+    },
+  };
+};
