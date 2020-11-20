@@ -1,6 +1,5 @@
 import React from "react";
 import { browser, Tabs } from "webextension-polyfill-ts";
-import { ContentConfig } from "../commons/typedefs";
 
 export interface IConfigContext {
   tabFallback: Promise<Tabs.Tab | undefined>;

@@ -1,8 +1,4 @@
 import {
-  Box,
-  Button,
-  CircularProgress,
-  Collapse,
   CssBaseline,
   Divider,
   Grid,
@@ -13,12 +9,11 @@ import {
   Typography,
 } from "@material-ui/core";
 import React from "react";
-import { browser, Tabs } from "webextension-polyfill-ts";
+import { browser } from "webextension-polyfill-ts";
 import {
   Action,
   ANALYSE_TEXT,
   ANALYSE_TEXT_ERROR,
-  GET_SCORE,
   GRAB_AND_ANALYSE,
   INIT_ANALYSIS,
   STATE_CONNECT,

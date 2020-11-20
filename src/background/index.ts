@@ -16,6 +16,7 @@ import Color from "color";
 import { TabState } from "../commons/typedefs";
 import TabStateManager from "./TabStateManager";
 import PageHeartbeatManager from "./HeartbeatManager";
+import sentimentSiteDataRepository from "./repository/sentimentSiteDataRepository";
 
 const stateManager = new TabStateManager();
 const heartbeatManager = new PageHeartbeatManager();
@@ -72,6 +73,30 @@ async function statefulMessageHandler(req: Action, sender: { tab?: Tabs.Tab }) {
               text: score.toFixed(1),
               tabId: currentTab.id,
             });
+
+            if (currentTab.url) {
+              const currentDate = new Date();
+              const sentimentSiteData = await sentimentSiteDataRepository.getDataByDate(
+                currentDate
+              );
+              const sentimentSiteDataKey = new URL(currentTab.url).hostname;
+              const sentimentSiteForUrl =
+                sentimentSiteData[sentimentSiteDataKey];
+              let averageSentiment = sentimentSiteForUrl?.averageSentiment;
+              averageSentiment = averageSentiment
+                ? (averageSentiment + score) / 2
+                : score;
+              sentimentSiteData[sentimentSiteDataKey] = {
+                ...sentimentSiteForUrl,
+                ...{
+                  averageSentiment,
+                },
+              };
+              await sentimentSiteDataRepository.setDataByDate(
+                currentDate,
+                sentimentSiteData
+              );
+            }
             stateManager.setState(currentTab, { lastScore: score });
           } catch (e) {
             console.error(e);
