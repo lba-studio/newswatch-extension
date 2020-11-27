@@ -14,3 +14,7 @@ export interface Action<T = any> {
   payload?: T;
   tabFallback?: Tabs.Tab;
 }
+export interface Heartbeat {
+  hostname: string;
+  firstHeartbeat: boolean;
+}

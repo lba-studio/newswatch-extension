@@ -4,6 +4,7 @@ import BaseSiteDataRepository from "./BaseSiteDataRepository";
 const TIME_SPENT_DATA_KEY = "TIME_SPENT_ON_SITE";
 
 export interface TimeSpentOnSiteData {
+  prettyName?: string;
   timeSpentSecond: number; // in seconds
 }
 

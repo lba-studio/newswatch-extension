@@ -1,4 +1,3 @@
-import dayjs from "dayjs";
 import { Tabs } from "webextension-polyfill-ts";
 import timeSpentRepository, {
   TimeSpentOnSiteData,
@@ -8,6 +7,8 @@ type Hostname = string;
 
 interface Heartbeat {
   source: Hostname;
+  title?: string;
+  firstHeartbeat: boolean;
 }
 
 /**
@@ -19,12 +20,19 @@ class PageHeartbeatManager {
 
   constructor(private readonly prettyName = "PageHeartbeatManager") {}
 
-  async heartbeat(pageHostname: string, tab: Tabs.Tab) {
+  async heartbeat(
+    pageHostname: string,
+    tab: Tabs.Tab,
+    { firstHeartbeat = false } = {}
+  ) {
     if (!tab.active) {
       return;
     }
-    // strip the page url to the relevant domain
-    this.heartbeatQueue.push({ source: pageHostname });
+    this.heartbeatQueue.push({
+      source: pageHostname,
+      title: tab.title,
+      firstHeartbeat,
+    });
     this.startHandler();
   }
 
@@ -34,9 +42,9 @@ class PageHeartbeatManager {
       if (this.isHandlerRunning) {
         return;
       }
+      this.isHandlerRunning = true;
       const currentDate = new Date();
       const data = await timeSpentRepository.getDataByDate(currentDate);
-      this.isHandlerRunning = true;
       while (this.heartbeatQueue.length > 0) {
         heartbeatBeingHandled = this.heartbeatQueue.shift();
         if (!heartbeatBeingHandled) {
@@ -48,14 +56,14 @@ class PageHeartbeatManager {
           timeSpentSecond: 0,
         };
         dataForSite.timeSpentSecond += 1;
+        dataForSite.prettyName = heartbeatBeingHandled.title;
         data[heartbeatBeingHandled.source] = dataForSite;
-        // console.debug("Received heartbeat", heartbeatBeingHandled.source);
       }
       timeSpentRepository.setDataByDate(currentDate, data);
     } catch (e) {
       console.error(`${this.prettyName} failed to unload queue.`, e);
       if (heartbeatBeingHandled) {
-        // chuck it back into the pile
+        // dead-letters go back to the queue
         this.heartbeatQueue.push(heartbeatBeingHandled);
         heartbeatBeingHandled = undefined;
       }

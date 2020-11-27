@@ -1,21 +1,24 @@
 import { browser } from "webextension-polyfill-ts";
-import { PAGE_HEARTBEAT } from "../commons/messages";
+import { Heartbeat, PAGE_HEARTBEAT } from "../commons/messages";
 
 class StatisticsManager {
   private hearbeatTimeoutToken?: ReturnType<typeof setTimeout>;
-  private async initHeartbeat() {
+  private async heartbeat(init = false) {
     this.hearbeatTimeoutToken = setTimeout(async () => {
       await browser.runtime.sendMessage({
         type: PAGE_HEARTBEAT,
-        payload: window.location.hostname,
+        payload: {
+          hostname: window.location.hostname,
+          firstHeartbeat: init,
+        } as Heartbeat,
       });
-      this.initHeartbeat();
+      this.heartbeat();
     }, 1000);
   }
 
   start() {
     if (!this.hearbeatTimeoutToken) {
-      this.initHeartbeat();
+      this.heartbeat(true);
     }
     return this;
   }

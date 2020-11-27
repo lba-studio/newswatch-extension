@@ -5,6 +5,7 @@ import {
   ANALYSE_TEXT,
   ANALYSE_TEXT_ERROR,
   GRAB_AND_ANALYSE,
+  Heartbeat,
   INIT_ANALYSIS,
   PAGE_HEARTBEAT,
   PUSH_CONTENT_CONFIG,
@@ -154,8 +155,13 @@ async function commandMessageHandlers(req: Action, sender: { tab?: Tabs.Tab }) {
       });
       break;
     case PAGE_HEARTBEAT:
-      if (typeof payload === "string" && sender.tab) {
-        heartbeatManager.heartbeat(payload, sender.tab);
+      const { hostname, firstHeartbeat } = payload as Heartbeat;
+      if (
+        typeof hostname === "string" &&
+        typeof firstHeartbeat === "boolean" &&
+        sender.tab
+      ) {
+        heartbeatManager.heartbeat(hostname, sender.tab, { firstHeartbeat });
       } else {
         console.error(
           `Unknown payload for ${PAGE_HEARTBEAT}, or cannot get sender tab. Skipping.`,
