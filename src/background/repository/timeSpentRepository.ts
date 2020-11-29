@@ -4,7 +4,10 @@ import BaseSiteDataRepository from "./BaseSiteDataRepository";
 const TIME_SPENT_DATA_KEY = "TIME_SPENT_ON_SITE";
 
 export interface TimeSpentOnSiteData {
-  prettyName?: string;
+  metadata?: {
+    prettyName: string;
+    sourcePath: string;
+  };
   timeSpentSecond: number; // in seconds
 }
 
@@ -17,7 +20,12 @@ class TimeSpentRepository extends BaseSiteDataRepository<TimeSpentOnSiteData> {
     map: Map<string, AnalyticsData<Partial<TimeSpentOnSiteData>>>
   ): AnalyticsData<TimeSpentOnSiteData> {
     let combinedValue: AnalyticsData<TimeSpentOnSiteData> = {};
-    map.forEach((dateEntry) => {
+    let highestKey: string; // used for sorting metadata
+    map.forEach((dateEntry, key) => {
+      const isDataNewer = !highestKey || key > highestKey;
+      if (isDataNewer) {
+        highestKey = key;
+      }
       Object.keys(dateEntry).forEach((url) => {
         if (!combinedValue[url]) {
           combinedValue[url] = {
@@ -27,6 +35,10 @@ class TimeSpentRepository extends BaseSiteDataRepository<TimeSpentOnSiteData> {
         combinedValue[url].timeSpentSecond =
           (dateEntry[url]?.timeSpentSecond || 0) +
           (combinedValue[url]?.timeSpentSecond || 0);
+        if (isDataNewer) {
+          combinedValue[url].metadata =
+            dateEntry[url]?.metadata || combinedValue[url].metadata;
+        }
       });
     });
     return combinedValue;

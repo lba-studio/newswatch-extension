@@ -155,13 +155,13 @@ async function commandMessageHandlers(req: Action, sender: { tab?: Tabs.Tab }) {
       });
       break;
     case PAGE_HEARTBEAT:
-      const { hostname, firstHeartbeat } = payload as Heartbeat;
+      const { hostname, firstHeartbeat, path } = payload as Heartbeat;
       if (
         typeof hostname === "string" &&
         typeof firstHeartbeat === "boolean" &&
         sender.tab
       ) {
-        heartbeatManager.heartbeat(hostname, sender.tab, { firstHeartbeat });
+        heartbeatManager.heartbeat(hostname, sender.tab, path, firstHeartbeat);
       } else {
         console.error(
           `Unknown payload for ${PAGE_HEARTBEAT}, or cannot get sender tab. Skipping.`,

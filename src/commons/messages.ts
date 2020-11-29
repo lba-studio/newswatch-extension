@@ -17,4 +17,5 @@ export interface Action<T = any> {
 export interface Heartbeat {
   hostname: string;
   firstHeartbeat: boolean;
+  path: string;
 }

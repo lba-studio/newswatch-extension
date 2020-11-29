@@ -10,6 +10,7 @@ class StatisticsManager {
         payload: {
           hostname: window.location.hostname,
           firstHeartbeat: init,
+          path: window.location.pathname,
         } as Heartbeat,
       });
       this.heartbeat();

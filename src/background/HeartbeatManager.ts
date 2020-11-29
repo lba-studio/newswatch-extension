@@ -9,6 +9,7 @@ interface Heartbeat {
   source: Hostname;
   title?: string;
   firstHeartbeat: boolean;
+  pagePath: string;
 }
 
 /**
@@ -23,7 +24,8 @@ class PageHeartbeatManager {
   async heartbeat(
     pageHostname: string,
     tab: Tabs.Tab,
-    { firstHeartbeat = false } = {}
+    pagePath: string,
+    firstHeartbeat = false
   ) {
     if (!tab.active) {
       return;
@@ -32,6 +34,7 @@ class PageHeartbeatManager {
       source: pageHostname,
       title: tab.title,
       firstHeartbeat,
+      pagePath,
     });
     this.startHandler();
   }
@@ -56,8 +59,21 @@ class PageHeartbeatManager {
           timeSpentSecond: 0,
         };
         dataForSite.timeSpentSecond += 1;
-        dataForSite.prettyName = heartbeatBeingHandled.title;
-        data[heartbeatBeingHandled.source] = dataForSite;
+        if (
+          heartbeatBeingHandled.title &&
+          heartbeatBeingHandled.firstHeartbeat
+        ) {
+          if (
+            !dataForSite.metadata ||
+            heartbeatBeingHandled.pagePath.split("/").length >
+              dataForSite.metadata.sourcePath.split("/").length
+          ) {
+            dataForSite.metadata = {
+              prettyName: heartbeatBeingHandled.title,
+              sourcePath: heartbeatBeingHandled.pagePath,
+            };
+          }
+        }
       }
       timeSpentRepository.setDataByDate(currentDate, data);
     } catch (e) {

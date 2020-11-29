@@ -99,8 +99,7 @@ function StatisticsView() {
       }
       console.log(data);
       const labels = data.slice(0, MAX_DATA_SHOWN).map((e) => {
-        console.log(e);
-        return e.value.prettyName || e.url;
+        return e.value.metadata?.prettyName || e.url;
       });
       const values = data
         .slice(0, MAX_DATA_SHOWN)
