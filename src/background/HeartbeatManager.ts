@@ -74,8 +74,9 @@ class PageHeartbeatManager {
             };
           }
         }
+        data[heartbeatBeingHandled.source] = dataForSite;
       }
-      timeSpentRepository.setDataByDate(currentDate, data);
+      await timeSpentRepository.setDataByDate(currentDate, data);
     } catch (e) {
       console.error(`${this.prettyName} failed to unload queue.`, e);
       if (heartbeatBeingHandled) {

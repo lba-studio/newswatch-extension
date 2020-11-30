@@ -159,6 +159,7 @@ async function commandMessageHandlers(req: Action, sender: { tab?: Tabs.Tab }) {
       if (
         typeof hostname === "string" &&
         typeof firstHeartbeat === "boolean" &&
+        typeof path === "string" &&
         sender.tab
       ) {
         heartbeatManager.heartbeat(hostname, sender.tab, path, firstHeartbeat);
