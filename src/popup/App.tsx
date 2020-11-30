@@ -69,7 +69,6 @@ export default function () {
           break;
       }
       setCurrentScore(state.lastScore);
-      console.log("State:", state.lastAction, state.lastScore, state);
     });
   }, []);
   React.useEffect(() => {
@@ -82,7 +81,6 @@ export default function () {
       setCurrentScore(undefined);
     }
   }, [hasErrored]);
-  console.log(currentScore, isLoading);
   return (
     <MuiThemeProvider theme={appTheme}>
       <CssBaseline>
