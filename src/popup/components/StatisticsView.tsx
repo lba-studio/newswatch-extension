@@ -20,6 +20,7 @@ import computeColorHex from "../../utils/computeColorHex";
 import { getSentimentScoreLikertValue } from "../../utils/sentimentScoreUtil";
 import Color from "color";
 import EmojiPeopleIcon from "@material-ui/icons/EmojiPeople";
+import trimText from "../../utils/trimText";
 
 dayjs.extend(duration);
 dayjs.extend(relativeTime);
@@ -30,7 +31,7 @@ dayjs.extend(relativeTime);
 const shades = ["#25ABE4", "#0E93CC", "#057DB0"];
 
 const MAX_DATA_SHOWN = 3;
-const MAX_LABEL_LENGTH = 16;
+const MAX_LABEL_LENGTH = 25;
 
 const useStyles = makeStyles({
   canvasContainer: {
@@ -42,6 +43,31 @@ interface StatisticsData {
   url: string;
   value: TimeSpentOnSiteData;
   sentimentScore: number;
+}
+
+function tooltipSplit(text: string): Array<string> {
+  // because chartjs's responsiveness is garbage, so we need manual split
+  const maxCharsPerLine = 36;
+  const output: Array<string> = [];
+  let lineIndex = 0;
+  text.split(" ").forEach((token) => {
+    let workingToken = token;
+    while (workingToken.length) {
+      const trimmedToken = workingToken.slice(0, maxCharsPerLine);
+      if (
+        output[lineIndex]?.length &&
+        trimmedToken.length + output[lineIndex].length > maxCharsPerLine
+      ) {
+        // new line
+        lineIndex += 1;
+      }
+      output[lineIndex] = [output[lineIndex], trimmedToken]
+        .filter(Boolean)
+        .join(" ");
+      workingToken = workingToken.slice(maxCharsPerLine);
+    }
+  });
+  return output;
 }
 
 function StatisticsView() {
@@ -109,7 +135,8 @@ function StatisticsView() {
         chartRef.current.destroy();
       }
       const labels = data.slice(0, MAX_DATA_SHOWN).map((e) => {
-        return e.value.metadata?.prettyName.slice(0, MAX_LABEL_LENGTH) || e.url;
+        const prettyName = e.value.metadata?.prettyName;
+        return prettyName ? trimText(prettyName, MAX_LABEL_LENGTH) : e.url;
       });
       const values = data
         .slice(0, MAX_DATA_SHOWN)
@@ -136,9 +163,7 @@ function StatisticsView() {
                   url,
                   value: { metadata },
                 } = data[tooltipItem[0].index!];
-                return `${
-                  metadata?.prettyName.slice(0, MAX_LABEL_LENGTH) || url
-                }`;
+                return tooltipSplit(`${metadata?.prettyName || url}`);
               },
               label: (tooltipItem, datasets) => {
                 const {
