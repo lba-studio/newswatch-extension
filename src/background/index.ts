@@ -17,7 +17,7 @@ import Color from "color";
 import { TabState } from "../commons/typedefs";
 import TabStateManager from "./TabStateManager";
 import PageHeartbeatManager from "./HeartbeatManager";
-import sentimentSiteDataRepository from "./repository/sentimentSiteDataRepository";
+import sentimentSiteDataRepository from "../repositories/sentimentSiteDataRepository";
 
 const stateManager = new TabStateManager();
 const heartbeatManager = new PageHeartbeatManager();

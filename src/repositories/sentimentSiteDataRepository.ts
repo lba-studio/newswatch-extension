@@ -1,4 +1,4 @@
-import { AnalyticsData } from "../../commons/typedefs";
+import { AnalyticsData } from "../commons/typedefs";
 import BaseSiteDataRepository from "./BaseSiteDataRepository";
 
 const AVERAGE_SENTIMENT_DATA_KEY = "AVERAGE_SENTIMENT_ON_SITE";
@@ -7,9 +7,7 @@ export interface SentimentSiteData {
   averageSentiment: number;
 }
 
-class SentimentSiteDataRepository extends BaseSiteDataRepository<
-  SentimentSiteData
-> {
+class SentimentSiteDataRepository extends BaseSiteDataRepository<SentimentSiteData> {
   constructor() {
     super(AVERAGE_SENTIMENT_DATA_KEY);
   }

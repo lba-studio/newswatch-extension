@@ -1,4 +1,4 @@
-import { AnalyticsData } from "../../commons/typedefs";
+import { AnalyticsData } from "../commons/typedefs";
 import BaseSiteDataRepository from "./BaseSiteDataRepository";
 
 const TIME_SPENT_DATA_KEY = "TIME_SPENT_ON_SITE";

@@ -3,19 +3,12 @@ import _ from "lodash";
 import React from "react";
 import timeSpentRepository, {
   TimeSpentOnSiteData,
-} from "../../background/repository/timeSpentRepository";
+} from "../../repositories/timeSpentRepository";
 import Chart from "chart.js";
-import {
-  Box,
-  makeStyles,
-  Paper,
-  Tab,
-  Tabs,
-  Typography,
-} from "@material-ui/core";
+import { Box, makeStyles, Tab, Tabs, Typography } from "@material-ui/core";
 import duration from "dayjs/plugin/duration";
 import relativeTime from "dayjs/plugin/relativeTime";
-import sentimentSiteDataRepository from "../../background/repository/sentimentSiteDataRepository";
+import sentimentSiteDataRepository from "../../repositories/sentimentSiteDataRepository";
 import computeColorHex from "../../utils/computeColorHex";
 import { getSentimentScoreLikertValue } from "../../utils/sentimentScoreUtil";
 import Color from "color";

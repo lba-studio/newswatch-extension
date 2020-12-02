@@ -1,7 +1,7 @@
 import { Tabs } from "webextension-polyfill-ts";
 import timeSpentRepository, {
   TimeSpentOnSiteData,
-} from "./repository/timeSpentRepository";
+} from "../repositories/timeSpentRepository";
 
 type Hostname = string;
 

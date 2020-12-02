@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 import { browser } from "webextension-polyfill-ts";
-import { AnalyticsData } from "../../commons/typedefs";
+import { AnalyticsData } from "../commons/typedefs";
 
 export type Url = string;
 
