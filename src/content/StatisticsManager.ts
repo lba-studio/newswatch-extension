@@ -17,16 +17,17 @@ class StatisticsManager {
     }, 1000);
   }
 
-  start() {
+  start(): this {
     if (!this.hearbeatTimeoutToken) {
       this.heartbeat(true);
     }
     return this;
   }
 
-  stop() {
+  stop(): this {
     clearTimeout(this.hearbeatTimeoutToken);
     this.hearbeatTimeoutToken = undefined;
+    return this;
   }
 }
 

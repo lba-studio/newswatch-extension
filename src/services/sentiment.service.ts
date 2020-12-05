@@ -4,7 +4,9 @@ import _ from "lodash";
 // TODO: remove creds
 const comprehend = new AWS.Comprehend({
   credentials: {
+    /* eslint-disable-next-line @typescript-eslint/no-non-null-assertion */
     accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
+    /* eslint-disable-next-line @typescript-eslint/no-non-null-assertion */
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
   },
   region: "ap-southeast-1",

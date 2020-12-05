@@ -17,7 +17,7 @@ interface Heartbeat {
  */
 class PageHeartbeatManager {
   private readonly heartbeatQueue: Array<Heartbeat> = [];
-  private isHandlerRunning: boolean = false;
+  private isHandlerRunning = false;
 
   constructor(private readonly prettyName = "PageHeartbeatManager") {}
 
@@ -26,7 +26,7 @@ class PageHeartbeatManager {
     tab: Tabs.Tab,
     pagePath: string,
     firstHeartbeat = false
-  ) {
+  ): Promise<void> {
     if (!tab.active) {
       return;
     }

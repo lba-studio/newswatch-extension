@@ -27,6 +27,7 @@ import Options from "./components/Options";
 import { TabState } from "../commons/typedefs";
 import ConfigContext from "./ConfigContext";
 import StatisticsView from "./components/StatisticsView";
+import NotificationView from "./components/NotificationView";
 
 const useStyles = makeStyles((theme) => ({
   rootGrid: {
@@ -38,6 +39,19 @@ const useStyles = makeStyles((theme) => ({
 const globalTabFallbackPromise = browser.tabs
   .query({ active: true, currentWindow: true })
   .then((e) => e[0]);
+
+function getGreeting() {
+  const hours = new Date().getHours();
+  let timeOfDay: string;
+  if (4 <= hours && hours < 12) {
+    timeOfDay = "morning";
+  } else if (12 <= hours && hours < 18) {
+    timeOfDay = "afternoon";
+  } else {
+    timeOfDay = "evening";
+  }
+  return `Good ${timeOfDay}!`;
+}
 
 export default function () {
   const classes = useStyles();
@@ -96,6 +110,11 @@ export default function () {
             alignItems="center"
             justify="center"
           >
+            <Grid item xs={12}>
+              <Typography align="center" variant="h1">
+                {getGreeting()}
+              </Typography>
+            </Grid>
             {isLoading && (
               <Grid item xs={12}>
                 <LinearProgress />
@@ -147,6 +166,9 @@ export default function () {
                 </IconButton>
               </Grid>
             )}
+            <Grid item xs={12}>
+              <NotificationView />
+            </Grid>
             <Grid item xs={12}>
               <StatisticsView />
             </Grid>

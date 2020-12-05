@@ -11,7 +11,7 @@ interface AnalyticsData {
   [url: string]: SiteAnalyticsData;
 }
 
-async function recordSiteVisit(siteUrl: string, score?: number) {
+async function recordSiteVisit(siteUrl: string, score?: number): Promise<void> {
   const key = KEY_SUFFIX + "SITE_VISIT";
   const savedAnalyticsData: AnalyticsData = await browser.storage.local.get(
     key

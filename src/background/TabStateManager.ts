@@ -32,7 +32,7 @@ class TabStateManager {
     return tab.id;
   }
 
-  setState(tab: Tabs.Tab, nextState: Partial<TabState>) {
+  setState(tab: Tabs.Tab, nextState: Partial<TabState>): void {
     const tabId = this.getTabId(tab);
     const tabData: TabData = this.stateMap.get(tabId) || {
       listeners: new Set(),

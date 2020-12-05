@@ -1,4 +1,4 @@
-import { browser, Runtime, Tabs } from "webextension-polyfill-ts";
+import { browser, Tabs } from "webextension-polyfill-ts";
 import { getSentiment } from "../services/sentiment.service";
 import {
   Action,
@@ -149,12 +149,13 @@ async function commandMessageHandlers(req: Action, sender: { tab?: Tabs.Tab }) {
     throw new Error("Cannot find active tab!");
   }
   switch (type) {
-    case GRAB_AND_ANALYSE:
+    case GRAB_AND_ANALYSE: {
       await browser.tabs.sendMessage(currentTab.id, {
         type: GRAB_AND_ANALYSE,
       });
       break;
-    case PAGE_HEARTBEAT:
+    }
+    case PAGE_HEARTBEAT: {
       const { hostname, firstHeartbeat, path } = payload as Heartbeat;
       if (
         typeof hostname === "string" &&
@@ -171,6 +172,7 @@ async function commandMessageHandlers(req: Action, sender: { tab?: Tabs.Tab }) {
         );
       }
       break;
+    }
     default:
       console.warn("No command handler for action type.", type);
     case INIT_ANALYSIS:
@@ -185,7 +187,7 @@ browser.runtime.onMessage.addListener(commandMessageHandlers);
 
 browser.runtime.onConnect.addListener(async (port) => {
   switch (port.name) {
-    case STATE_CONNECT:
+    case STATE_CONNECT: {
       if (port.sender?.id !== browser.runtime.id) {
         throw new Error(
           "Cannot connect from a non-extension context (has to be from an extension component)."
@@ -205,6 +207,7 @@ browser.runtime.onConnect.addListener(async (port) => {
         stateManager.removeListener(senderTab, stateListener);
       });
       break;
+    }
     default:
       break;
   }

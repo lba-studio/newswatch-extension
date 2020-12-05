@@ -7,7 +7,9 @@ export interface SentimentSiteData {
   averageSentiment: number;
 }
 
-class SentimentSiteDataRepository extends BaseSiteDataRepository<SentimentSiteData> {
+class SentimentSiteDataRepository extends BaseSiteDataRepository<
+  SentimentSiteData
+> {
   constructor() {
     super(AVERAGE_SENTIMENT_DATA_KEY);
   }

@@ -8,14 +8,19 @@
     "start": "npm run watch",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack",
-    "watch": "webpack --watch"
+    "watch": "webpack --watch",
+    "lint": "eslint --ext .ts src/ && prettier --check src/",
+    "lint:fix": "eslint --ext .ts src/ && prettier --write src/"
   },
   "author": "Benjamin Tanone",
   "license": "ISC",
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^4.9.0",
+    "@typescript-eslint/parser": "^4.9.0",
     "clean-webpack-plugin": "^3.0.0",
     "copy-webpack-plugin": "^6.1.0",
     "dotenv": "^8.2.0",
+    "eslint": "^7.15.0",
     "generate-json-webpack-plugin": "^1.0.0",
     "html-webpack-plugin": "^4.5.0",
     "ts-loader": "^8.0.3",

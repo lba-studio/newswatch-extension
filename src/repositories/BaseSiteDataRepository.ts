@@ -26,7 +26,7 @@ abstract class BaseSiteDataRepository<T> {
     return data;
   }
 
-  async setDataByDate(date: Date, data: AnalyticsData<T>) {
+  async setDataByDate(date: Date, data: AnalyticsData<T>): Promise<void> {
     const dataKey = this.getDataKey(date);
     await browser.storage.local.set({ [dataKey]: data });
   }

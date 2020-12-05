@@ -99,7 +99,7 @@ browser.runtime.onMessage.addListener(async (message, sender) => {
   if (sender.tab) {
     return;
   } else {
-    const { type, payload } = message;
+    const { type } = message;
     switch (type) {
       case GRAB_AND_ANALYSE:
         await analysePage();
