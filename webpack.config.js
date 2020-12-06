@@ -30,7 +30,7 @@ module.exports = (env, argv) => {
       manifest_version: 2,
       description:
         "A friendly robot which tells you how consuming a piece of content would make you feel.",
-      permissions: ["storage", "contextMenus"],
+      permissions: ["storage", "contextMenus", "notifications"],
       content_scripts: [
         {
           matches: ["<all_urls>"],
