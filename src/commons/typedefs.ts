@@ -1,3 +1,5 @@
+import { TimeSpentOnSiteData } from "../repositories/timeSpentRepository";
+
 export enum SentimentLikertValue {
   POSITIVE = "Positive",
   VERY_POSITIVE = "Very Positive",
@@ -23,3 +25,9 @@ export interface AnalyticsData<T> {
 }
 
 export type Hostname = string;
+
+export interface StatisticsData {
+  url: string;
+  timeSpentOnSiteData: TimeSpentOnSiteData;
+  sentimentScore: number;
+}

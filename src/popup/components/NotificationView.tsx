@@ -1,9 +1,6 @@
 import {
   Box,
-  Button,
   Card,
-  CardContent,
-  Grid,
   IconButton,
   makeStyles,
   Typography,
@@ -17,7 +14,6 @@ import CloseIcon from "@material-ui/icons/Close";
 const useStyles = makeStyles((theme) => ({
   insightCard: {
     marginBottom: theme.spacing(1),
-    // padding: theme.spacing(1),
   },
 }));
 
@@ -34,11 +30,13 @@ function NotificationView() {
   return (
     <Box display="flex" flexDirection="column">
       {notifications ? (
-        notifications.map((notification) => (
+        notifications.reverse().map((notification) => (
           <Card className={classes.insightCard}>
             <Box display="flex" alignItems="center">
               <Box flex="1 1" p={1}>
-                <Typography>{notification.message}</Typography>
+                <Typography variant="subtitle2">
+                  {notification.message}
+                </Typography>
               </Box>
               <Box flex="0 0">
                 <IconButton

@@ -1,3 +1,4 @@
+/* eslint-disable */
 const path = require("path");
 const CopyPlugin = require("copy-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
@@ -30,7 +31,7 @@ module.exports = (env, argv) => {
       manifest_version: 2,
       description:
         "A friendly robot which tells you how consuming a piece of content would make you feel.",
-      permissions: ["storage", "contextMenus", "notifications"],
+      permissions: ["storage", "contextMenus", "notifications", "alarms"],
       content_scripts: [
         {
           matches: ["<all_urls>"],

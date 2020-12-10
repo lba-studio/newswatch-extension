@@ -1,27 +1,22 @@
 import dayjs from "dayjs";
 import _ from "lodash";
 import React from "react";
-import timeSpentRepository, {
-  TimeSpentOnSiteData,
-} from "../../repositories/timeSpentRepository";
 import Chart from "chart.js";
 import { Box, makeStyles, Tab, Tabs, Typography } from "@material-ui/core";
 import duration from "dayjs/plugin/duration";
 import relativeTime from "dayjs/plugin/relativeTime";
-import sentimentSiteDataRepository from "../../repositories/sentimentSiteDataRepository";
 import computeColorHex from "../../utils/computeColorHex";
 import { getSentimentScoreLikertValue } from "../../utils/sentimentScoreUtil";
 import Color from "color";
 import EmojiPeopleIcon from "@material-ui/icons/EmojiPeople";
 import trimText from "../../utils/trimText";
+import { StatisticsData } from "../../commons/typedefs";
+import statisticsService from "../../services/statistics.service";
 
 dayjs.extend(duration);
 dayjs.extend(relativeTime);
 
-// color-code pie to determine sentiment
-// a pie determines the amount of time spent on a particular site
-
-const shades = ["#25ABE4", "#0E93CC", "#057DB0"];
+// const shades = ["#25ABE4", "#0E93CC", "#057DB0"];
 
 const MAX_DATA_SHOWN = 3;
 const MAX_LABEL_LENGTH = 25;
@@ -31,12 +26,6 @@ const useStyles = makeStyles({
     height: 256,
   },
 });
-
-interface StatisticsData {
-  url: string;
-  value: TimeSpentOnSiteData;
-  sentimentScore: number;
-}
 
 function tooltipSplit(text: string): Array<string> {
   // because chartjs's responsiveness is garbage, so we need manual split
@@ -67,42 +56,30 @@ function StatisticsView() {
   const [data, setData] = React.useState<Array<StatisticsData>>();
   const canvasRef = React.useRef<HTMLCanvasElement>(null);
   const chartRef = React.useRef<Chart | null>(null);
-  const [isLoading, setIsLoading] = React.useState(true);
-  const [hasErrored, setHasErrored] = React.useState(false);
+  const [, setIsLoading] = React.useState(true);
+  const [, setHasErrored] = React.useState(false);
   const [searchPeriodDays, setSearchPeriodDays] = React.useState(0);
   const classes = useStyles();
   function getColor(ctx: Parameters<Chart.Scriptable<any>>[0]): string {
-    const score = data?.[ctx.dataIndex!].sentimentScore;
+    /* eslint-disable-next-line @typescript-eslint/no-non-null-assertion */
+    const dataIndex = ctx.dataIndex!;
+    const score = data?.[dataIndex].sentimentScore;
     const color = score ? computeColorHex(score) : "gray";
     return Color(color)
-      .darken(ctx.dataIndex! / 10)
+      .darken(dataIndex / 10)
       .hex()
       .toString();
   }
   React.useEffect(() => {
     setIsLoading(true);
-    timeSpentRepository
-      .getAllDataWithinRangeInclusive(
-        dayjs().subtract(searchPeriodDays, "day").toDate()
-      )
+    statisticsService
+      .getStatisticsData(dayjs().subtract(searchPeriodDays, "day").toDate())
       .then(async (res) => {
-        console.log(res);
-        const flattenedDataForTimePeriod = timeSpentRepository.flattenMap(res);
-        const sentimentSiteData = await sentimentSiteDataRepository
-          .getAllDataWithinRangeInclusive(
-            dayjs().subtract(searchPeriodDays, "day").toDate()
-          )
-          .then((e) => sentimentSiteDataRepository.flattenMap(e));
-        const data: Array<StatisticsData> = Object.keys(
-          flattenedDataForTimePeriod
-        )
-          .map((url) => ({
-            url: url,
-            value: flattenedDataForTimePeriod[url],
-            sentimentScore: sentimentSiteData[url]?.averageSentiment,
-          }))
-          .sort((a, b) => b.value.timeSpentSecond - a.value.timeSpentSecond);
-
+        const data = res.sort(
+          (a, b) =>
+            b.timeSpentOnSiteData.timeSpentSecond -
+            a.timeSpentOnSiteData.timeSpentSecond
+        );
         setData(data);
       })
       .catch((e) => {
@@ -128,12 +105,12 @@ function StatisticsView() {
         chartRef.current.destroy();
       }
       const labels = data.slice(0, MAX_DATA_SHOWN).map((e) => {
-        const prettyName = e.value.metadata?.prettyName;
+        const prettyName = e.timeSpentOnSiteData.metadata?.prettyName;
         return prettyName ? trimText(prettyName, MAX_LABEL_LENGTH) : e.url;
       });
       const values = data
         .slice(0, MAX_DATA_SHOWN)
-        .map((e) => e.value.timeSpentSecond);
+        .map((e) => e.timeSpentOnSiteData.timeSpentSecond);
       chartRef.current = new Chart(canvasContext, {
         plugins: [],
         type: "pie",
@@ -154,14 +131,16 @@ function StatisticsView() {
               title: (tooltipItem) => {
                 const {
                   url,
-                  value: { metadata },
+                  timeSpentOnSiteData: { metadata },
+                  /* eslint-disable-next-line @typescript-eslint/no-non-null-assertion */
                 } = data[tooltipItem[0].index!];
                 return tooltipSplit(`${metadata?.prettyName || url}`);
               },
-              label: (tooltipItem, datasets) => {
+              label: (tooltipItem) => {
                 const {
                   url,
-                  value: { timeSpentSecond },
+                  timeSpentOnSiteData: { timeSpentSecond },
+                  /* eslint-disable-next-line @typescript-eslint/no-non-null-assertion */
                 } = data[tooltipItem.index!];
                 const duration = dayjs.duration(timeSpentSecond, "second");
                 const timeLabel = `${duration
@@ -176,10 +155,11 @@ function StatisticsView() {
                   .padStart(2, "0")}`;
                 return `${url}: ${timeLabel}`;
               },
-              footer: (tooltipItem, datasets) => {
+              footer: (tooltipItem) => {
                 const {
-                  value: { timeSpentSecond },
+                  timeSpentOnSiteData: { timeSpentSecond },
                   sentimentScore,
+                  /* eslint-disable-next-line @typescript-eslint/no-non-null-assertion */
                 } = data[tooltipItem[0].index!];
                 const duration = dayjs.duration(timeSpentSecond, "second");
                 const durationString = duration.humanize();

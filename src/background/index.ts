@@ -18,6 +18,7 @@ import { TabState } from "../commons/typedefs";
 import TabStateManager from "./TabStateManager";
 import PageHeartbeatManager from "./HeartbeatManager";
 import sentimentSiteDataRepository from "../repositories/sentimentSiteDataRepository";
+import insightService from "./services/insightService";
 
 const stateManager = new TabStateManager();
 const heartbeatManager = new PageHeartbeatManager();
@@ -231,8 +232,9 @@ browser.contextMenus.create({
     }
   },
 });
-// browser.browserAction.onClicked.addListener((tab, info) => {
-//   if (tab.id) {
-//     browser.tabs.sendMessage(tab.id, { type: GRAB_AND_ANALYSE });
-//   }
-// });
+
+insightService.setup();
+
+// setTimeout(() => {
+//   insightService.collectInsights();
+// }, 3000);

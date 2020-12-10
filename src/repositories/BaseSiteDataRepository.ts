@@ -48,6 +48,15 @@ abstract class BaseSiteDataRepository<T> {
     return result;
   }
 
+  async getFlattenedDataWithinRangeInclusive(
+    startDate = dayjs().subtract(1, "month").toDate(),
+    endDate: Date = new Date()
+  ): Promise<AnalyticsData<T>> {
+    return this.getAllDataWithinRangeInclusive(startDate, endDate).then(
+      this.flattenMap
+    );
+  }
+
   abstract flattenMap(map: Map<string, AnalyticsData<T>>): AnalyticsData<T>;
 }
 
