@@ -9,8 +9,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack",
     "watch": "webpack --watch",
-    "lint": "eslint --ext .ts src/ && prettier --check src/",
-    "lint:fix": "eslint --ext .ts src/ && prettier --write src/"
+    "lint": "eslint --ext .ts,.tsx src/ && prettier --check src/",
+    "lint:fix": "eslint --ext .ts,.tsx src/ && prettier --write src/"
   },
   "author": "Benjamin Tanone",
   "license": "ISC",

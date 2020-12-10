@@ -14,4 +14,12 @@ module.exports = {
     "@typescript-eslint/no-explicit-any": "off",
     "no-fallthrough": "off",
   },
+  overrides: [
+    {
+      files: ["*.tsx", "*.jsx"],
+      rules: {
+        "@typescript-eslint/explicit-module-boundary-types": "off",
+      },
+    },
+  ],
 };
