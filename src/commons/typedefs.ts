@@ -29,5 +29,5 @@ export type Hostname = string;
 export interface StatisticsData {
   url: string;
   timeSpentOnSiteData: TimeSpentOnSiteData;
-  sentimentScore: number;
+  sentimentScore?: number;
 }

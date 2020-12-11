@@ -65,7 +65,7 @@ class PageHeartbeatManager {
         ) {
           if (
             !dataForSite.metadata ||
-            heartbeatBeingHandled.pagePath.split("/").length >
+            heartbeatBeingHandled.pagePath.split("/").length <
               dataForSite.metadata.sourcePath.split("/").length
           ) {
             dataForSite.metadata = {

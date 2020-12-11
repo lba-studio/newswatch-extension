@@ -10,23 +10,24 @@ const ALARM_KEY = "ALARM_INSIGHT";
 dayjs.extend(duration);
 
 async function collectInsights(): Promise<void> {
-  const negativeSiteLabels: Array<string> = [];
+  console.debug("Collecting insights...");
   const currentDate = new Date();
   const statisticsData = await statisticsService.getStatisticsData(currentDate);
   const threshold = dayjs.duration(1, "minute");
-  statisticsData
+  const negativeSiteLabels: Array<string> = statisticsData
     .filter(
-      (data) => data.timeSpentOnSiteData.timeSpentSecond > threshold.asSeconds()
+      (data) =>
+        data.sentimentScore &&
+        data.sentimentScore < -0.2 &&
+        data.timeSpentOnSiteData.timeSpentSecond > threshold.asSeconds()
     )
     .sort(
       (a, b) =>
         b.timeSpentOnSiteData.timeSpentSecond -
         a.timeSpentOnSiteData.timeSpentSecond
     )
-    .forEach((data) => {
-      if (data.sentimentScore < -0.2) {
-        negativeSiteLabels.push(data.url);
-      }
+    .map((data) => {
+      return data.url;
     });
   if (negativeSiteLabels.length) {
     await notificationRepository.addNotification({
