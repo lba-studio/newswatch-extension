@@ -66,7 +66,7 @@ class TabStateManager {
     return this;
   }
 
-  commitState(tab: Tabs.Tab): this {
+  notifyListeners(tab: Tabs.Tab): this {
     const tabData = this.stateMap.get(this.getTabId(tab));
     if (!tabData) {
       console.error(

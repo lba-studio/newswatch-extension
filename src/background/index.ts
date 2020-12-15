@@ -133,7 +133,7 @@ async function statefulMessageHandler(req: Action, sender: { tab?: Tabs.Tab }) {
       // only commit known actions
       console.debug("currentState", type, currentTab.id, stateManager);
       stateManager.setState(currentTab, { lastAction: type });
-      stateManager.commitState(currentTab);
+      stateManager.notifyListeners(currentTab);
     }
   } else {
     console.warn("Cannot find currentTab or its ID!", currentTab);
