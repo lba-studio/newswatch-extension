@@ -5,6 +5,10 @@ export interface IConfigContext {
   tabFallback: Promise<Tabs.Tab | undefined>;
 }
 
+export const globalTabFallbackPromise = browser.tabs
+  .query({ active: true, currentWindow: true })
+  .then((e) => e[0]);
+
 const ConfigContext = React.createContext<IConfigContext>({
   /**
    * because if the popup is interacted with, the browser API

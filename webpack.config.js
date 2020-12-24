@@ -14,7 +14,7 @@ dotenv.config();
 module.exports = (env, argv) => {
   const plugins = [
     new CleanWebpackPlugin({
-      cleanAfterEveryBuildPatterns: ["!popup.html"],
+      cleanAfterEveryBuildPatterns: ["!popup.html", "!option.html"],
     }),
     new CopyPlugin({
       patterns: [{ from: "public" }],
@@ -23,7 +23,13 @@ module.exports = (env, argv) => {
       inject: true,
       chunks: ["popup"],
       filename: "popup.html",
-      template: "./src/popup/index.html",
+      template: "./src/frontend/index-template.html",
+    }),
+    new HtmlWebpackPlugin({
+      inject: true,
+      chunks: ["option"],
+      filename: "option.html",
+      template: "./src/frontend/index-template.html",
     }),
     new GenerateJsonPlugin("manifest.json", {
       name: "Zenti",
@@ -45,6 +51,12 @@ module.exports = (env, argv) => {
       background: {
         scripts: ["background.js"],
       },
+      options_ui: {
+        page: "option.html",
+        browser_style: false,
+        open_in_tab: true,
+      },
+
       icons: {
         16: "favicon.png",
         48: "favicon.png",
@@ -69,12 +81,13 @@ module.exports = (env, argv) => {
       })
     );
   }
-  return {
+  const config = {
     mode: "development",
     entry: {
       background: "./src/background/index.ts",
       content: "./src/content/index.ts",
-      popup: "./src/popup/index.tsx",
+      popup: "./src/frontend/popup/index.tsx",
+      option: "./src/frontend/option/index.tsx",
     },
     module: {
       rules: [
@@ -95,4 +108,12 @@ module.exports = (env, argv) => {
       path: path.resolve(__dirname, "dist"),
     },
   };
+  if (argv.mode === "production") {
+    config.optimization = {
+      splitChunks: {
+        chunks: "all",
+      },
+    };
+  }
+  return config;
 };
