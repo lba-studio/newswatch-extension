@@ -45,7 +45,9 @@ function subscribe(
     if (areaName !== "local") {
       return;
     }
-    handler(changes[STORAGE_KEY].newValue);
+    if (changes[STORAGE_KEY]) {
+      handler(changes[STORAGE_KEY].newValue);
+    }
   });
 }
 

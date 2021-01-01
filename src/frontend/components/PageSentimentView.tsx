@@ -17,7 +17,7 @@ import {
 import { TabState } from "../../commons/typedefs";
 import computeColorHex from "../../utils/computeColorHex";
 import { getSentimentScoreLikertValue } from "../../utils/sentimentScoreUtil";
-import ConfigContext from "../ConfigContext";
+import ConfigContext from "./ConfigContext";
 import SentimentIcon from "./SentimentIcon";
 import RefreshIcon from "@material-ui/icons/Refresh";
 

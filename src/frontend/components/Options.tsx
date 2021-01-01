@@ -7,7 +7,7 @@ import {
   STATE_CONNECT,
 } from "../../commons/messages";
 import { ContentConfig, TabState } from "../../commons/typedefs";
-import ConfigContext from "../ConfigContext";
+import ConfigContext from "./ConfigContext";
 
 function Options() {
   const configContext = React.useContext(ConfigContext);

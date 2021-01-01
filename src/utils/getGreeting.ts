@@ -1,4 +1,4 @@
-function getGreeting(): string {
+function getGreeting(name?: string): string {
   const hours = new Date().getHours();
   let timeOfDay: string;
   if (4 <= hours && hours < 12) {
@@ -8,7 +8,7 @@ function getGreeting(): string {
   } else {
     timeOfDay = "evening";
   }
-  return `Good ${timeOfDay}!`;
+  return `Good ${timeOfDay}${name ? `, ${name}` : ""}!`;
 }
 
 export default getGreeting;

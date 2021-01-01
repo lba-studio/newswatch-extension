@@ -94,7 +94,6 @@ function StatisticsView() {
     if (!data) {
       return;
     }
-    console.log(data);
     const canvasContext: CanvasRenderingContext2D = _.invoke(
       canvasRef,
       "current.getContext",
