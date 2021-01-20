@@ -64,7 +64,7 @@ function PageSentimentView() {
     }
   }, [hasErrored]);
   return (
-    <>
+    <Grid container justify="center" alignItems="center">
       {isLoading && (
         <Grid item xs={12}>
           <LinearProgress />
@@ -110,7 +110,7 @@ function PageSentimentView() {
           </IconButton>
         </Grid>
       )}
-    </>
+    </Grid>
   );
 }
 

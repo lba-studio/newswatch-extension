@@ -32,7 +32,7 @@ export default function () {
             {getGreeting(user?.name)}
           </Typography>
         </Grid>
-        <Grid container>
+        <Grid item xs={12}>
           <PageSentimentView />
         </Grid>
         <Grid item xs={12}>
