@@ -77,6 +77,7 @@ module.exports = (env, argv) => {
         entries: {
           contentScript: "content",
           background: "background",
+          extensionPage: ["popup", "option"],
         },
       })
     );

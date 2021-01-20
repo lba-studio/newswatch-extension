@@ -6,6 +6,7 @@ import NotificationView from "../components/NotificationView";
 import DefaultAppWrapper from "../components/DefaultAppWrapper";
 import getGreeting from "../../utils/getGreeting";
 import PageSentimentView from "../components/PageSentimentView";
+import AuthContext from "../auth/AuthContext";
 
 const useStyles = makeStyles((theme) => ({
   rootGrid: {
@@ -15,6 +16,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function () {
+  const { user } = React.useContext(AuthContext);
   const classes = useStyles();
   return (
     <DefaultAppWrapper>
@@ -27,7 +29,7 @@ export default function () {
       >
         <Grid item xs={12}>
           <Typography align="center" variant="h1">
-            {getGreeting()}
+            {getGreeting(user?.name)}
           </Typography>
         </Grid>
         <Grid container>

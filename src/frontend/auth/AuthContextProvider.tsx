@@ -10,10 +10,6 @@ function generateRandomString(crypto: Crypto, length = 16) {
   );
 }
 
-async function loadToken(token: string) {
-  await authService.setToken(token);
-}
-
 async function logout() {
   await authService.removeToken();
 }
@@ -22,8 +18,8 @@ export default function AuthContextProvider({ children }) {
   const [isLoading, setIsLoading] = React.useState(true);
   const [loginData, setLoginData] = React.useState<User>();
   React.useEffect(() => {
-    authService.getToken().then((token) => {
-      setLoginData(authService.parseToken(token));
+    authService.getUser().then((user) => {
+      setLoginData(user);
       setIsLoading(false);
     });
     authService.onUserChange((user) => setLoginData(user));
@@ -56,8 +52,7 @@ export default function AuthContextProvider({ children }) {
             }
             authService
               .exchangeCode(code, codeVerifier)
-              .then(async (token) => {
-                await loadToken(token);
+              .then(() => {
                 closeChildWindow();
               })
               .catch((e) => console.error(e));
@@ -96,8 +91,6 @@ export default function AuthContextProvider({ children }) {
       value={{
         isLoading,
         user: loginData,
-        loadToken,
-        getToken: () => authService.getToken(),
         logout,
         launchWebAuthFlow,
       }}

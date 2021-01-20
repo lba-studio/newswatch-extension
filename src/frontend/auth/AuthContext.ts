@@ -10,15 +10,11 @@ function stubFn(): any {
 export interface ILoginContext {
   user?: User;
   isLoading: boolean;
-  loadToken: (token: string) => Promise<void>;
-  getToken: () => Promise<string | undefined>;
   logout: () => Promise<void>;
   launchWebAuthFlow: () => Promise<void>;
 }
 const AuthContext = React.createContext<ILoginContext>({
   isLoading: true,
-  loadToken: stubFn,
-  getToken: stubFn,
   logout: stubFn,
   launchWebAuthFlow: stubFn,
 });
