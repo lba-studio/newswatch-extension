@@ -20,6 +20,7 @@ import PageHeartbeatManager from "./HeartbeatManager";
 import sentimentSiteDataRepository from "../repositories/sentimentSiteDataRepository";
 import insightService from "./services/insightService";
 import authRefreshService from "./services/authRefreshService";
+import authService from "../services/auth.service";
 
 const stateManager = new TabStateManager();
 const heartbeatManager = new PageHeartbeatManager();
@@ -64,10 +65,11 @@ async function statefulMessageHandler(req: Action, sender: { tab?: Tabs.Tab }) {
       case PUSH_CONTENT_CONFIG:
         stateManager.setState(currentTab, { contentConfig: payload });
         break;
-      case ANALYSE_TEXT:
-        if (payload && typeof payload === "string") {
+      case ANALYSE_TEXT: {
+        const token = await authService.getToken();
+        if (payload && typeof payload === "string" && token) {
           try {
-            const score = await getSentiment(payload);
+            const score = await getSentiment(payload, token);
             await browser.browserAction.setBadgeBackgroundColor({
               color: Color(computeColorHex(score)).darken(0.5).string(),
               tabId: currentTab.id,
@@ -123,6 +125,7 @@ async function statefulMessageHandler(req: Action, sender: { tab?: Tabs.Tab }) {
           });
         }
         break;
+      }
       default:
         console.warn("No tab-handler for action", type, req);
       case GRAB_AND_ANALYSE:

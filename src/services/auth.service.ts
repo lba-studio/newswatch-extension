@@ -41,10 +41,15 @@ async function parseToken(token?: string): Promise<User | undefined> {
   };
 }
 
-async function getUser(): Promise<User | undefined> {
+async function getToken(): Promise<string | undefined> {
   const token = (await browser.storage.local.get(LOGIN_TOKEN_KEY))[
     LOGIN_TOKEN_KEY
   ];
+  return token;
+}
+
+async function getUser(): Promise<User | undefined> {
+  const token = await getToken();
   if (token && typeof token !== "string") {
     throw new Error("Login token is not of type string.");
   }
@@ -146,6 +151,7 @@ const authService = {
   onUserChange,
   exchangeCode,
   getAuthUrl,
+  getToken,
   clientId: CLIENT_ID,
   authDomain: AUTH_DOMAIN,
   loginOrigin: LOGIN_ORIGIN,

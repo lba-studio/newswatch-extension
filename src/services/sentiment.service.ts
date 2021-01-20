@@ -17,5 +17,5 @@ export async function getSentiment(
       }
     )
     .then((response) => response.data);
-  return result;
+  return result.score;
 }
