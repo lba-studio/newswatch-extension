@@ -64,11 +64,6 @@ module.exports = (env, argv) => {
       },
       persistent: argv.mode !== "production",
     }),
-    // TODO: DANGEROUS, make sure this is removed before publishing this project
-    new webpack.EnvironmentPlugin([
-      "AWS_ACCESS_KEY_ID",
-      "AWS_SECRET_ACCESS_KEY",
-    ]),
   ];
   if (argv.mode !== "production") {
     plugins.push(
