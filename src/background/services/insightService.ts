@@ -47,7 +47,7 @@ function setup(): void {
     periodInMinutes: dayjs.duration(24, "hours").asMinutes(),
   });
   browser.alarms.onAlarm.addListener((alarm) => {
-    if (alarm.name !== "ALARM_KEY") {
+    if (alarm.name !== ALARM_KEY) {
       return;
     }
     collectInsights();
