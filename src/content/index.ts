@@ -110,7 +110,7 @@ browser.runtime.onMessage.addListener(async (message, sender) => {
 
 let lastAnalyzed: { analyzedElements: ElementText } | undefined;
 
-async function analysePage() {
+async function analysePage(): Promise<void> {
   console.log("Analyzing page...");
   await browser.runtime.sendMessage({ type: INIT_ANALYSIS });
   return new Promise((res, rej) =>
