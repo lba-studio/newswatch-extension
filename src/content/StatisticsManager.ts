@@ -2,9 +2,9 @@ import { browser } from "webextension-polyfill-ts";
 import { Heartbeat, PAGE_HEARTBEAT } from "../commons/messages";
 
 class StatisticsManager {
-  private hearbeatTimeoutToken?: ReturnType<typeof setTimeout>;
+  private hearbeatTimeoutToken?: number;
   private async heartbeat(init = false) {
-    this.hearbeatTimeoutToken = setTimeout(async () => {
+    this.hearbeatTimeoutToken = window.setTimeout(async () => {
       await browser.runtime.sendMessage({
         type: PAGE_HEARTBEAT,
         payload: {
@@ -25,7 +25,7 @@ class StatisticsManager {
   }
 
   stop(): this {
-    clearTimeout(this.hearbeatTimeoutToken);
+    window.clearTimeout(this.hearbeatTimeoutToken);
     this.hearbeatTimeoutToken = undefined;
     return this;
   }
