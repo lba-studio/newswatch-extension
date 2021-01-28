@@ -1,5 +1,6 @@
 import { browser, Tabs } from "webextension-polyfill-ts";
 import { TabState } from "../commons/typedefs";
+import getTabId from "./utils/getTabId";
 
 export type StateListener = (state: TabState) => void;
 
@@ -8,53 +9,43 @@ export interface TabData {
   state: TabState;
 }
 
+function getInitialState(): TabState {
+  return {
+    contentConfig: {
+      highlightSelectedText: false,
+    },
+  };
+}
+
 class TabStateManager {
-  private stateMap: Map<number, TabData> = new Map();
+  private readonly stateMap: Map<number, TabData>;
+
   constructor() {
+    this.stateMap = new Map();
     browser.tabs.onRemoved.addListener((tabId) => {
       this.stateMap.delete(tabId);
     });
   }
 
-  private get defaultState(): TabState {
-    return {
-      contentConfig: {
-        highlightSelectedText: false,
-      },
-    };
-  }
-
-  private getTabId(tab: Tabs.Tab): number {
-    if (!tab || !tab.id) {
-      console.error("Unable to get tab.id for tab.", tab);
-      throw new Error("Unable to get tab.id for tab.");
-    }
-    return tab.id;
-  }
-
   setState(tab: Tabs.Tab, nextState: Partial<TabState>): void {
-    const tabId = this.getTabId(tab);
+    const tabId = getTabId(tab);
     const tabData: TabData = this.stateMap.get(tabId) || {
       listeners: new Set(),
-      state: {
-        contentConfig: {
-          highlightSelectedText: false,
-        },
-      },
+      state: getInitialState(),
     };
     tabData.state = { ...tabData.state, ...nextState };
     this.stateMap.set(tabId, { ...tabData, ...nextState });
   }
 
   getState(tab: Tabs.Tab): TabState {
-    const tabId = this.getTabId(tab);
-    return this.stateMap.get(tabId)?.state || this.defaultState;
+    const tabId = getTabId(tab);
+    return this.stateMap.get(tabId)?.state || getInitialState();
   }
 
   addListener(tab: Tabs.Tab, listener: StateListener): this {
-    const tabData: TabData = this.stateMap.get(this.getTabId(tab)) || {
+    const tabData: TabData = this.stateMap.get(getTabId(tab)) || {
       listeners: new Set(),
-      state: this.defaultState,
+      state: getInitialState(),
     };
     tabData.listeners.add(listener);
     return this;
@@ -62,12 +53,12 @@ class TabStateManager {
 
   removeListener(tab: Tabs.Tab, listener: StateListener): this {
     console.debug("Deleting listener for tab", tab);
-    this.stateMap.get(this.getTabId(tab))?.listeners.delete(listener);
+    this.stateMap.get(getTabId(tab))?.listeners.delete(listener);
     return this;
   }
 
   notifyListeners(tab: Tabs.Tab): this {
-    const tabData = this.stateMap.get(this.getTabId(tab));
+    const tabData = this.stateMap.get(getTabId(tab));
     if (!tabData) {
       console.error(
         `Cannot commit state of missing tab data of tab ID ${tab.id}.`,

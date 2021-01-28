@@ -34,6 +34,11 @@ async function collectInsights(): Promise<void> {
       message: `It seems like you've been visiting a few negative sites recently, such as ${negativeSiteLabels[0]}.`,
       timestamp: currentDate.valueOf(),
     });
+  } else {
+    await notificationRepository.addNotification({
+      message: "Score! You haven't visited any negative sites recently.",
+      timestamp: currentDate.valueOf(),
+    });
   }
 }
 
@@ -42,8 +47,9 @@ function setup(): void {
     return;
   }
   isInitialised = true;
+  const d = dayjs();
   browser.alarms.create(ALARM_KEY, {
-    when: dayjs().add(1, "day").set("hour", 17).valueOf(),
+    when: (d.hour() >= 17 ? d.add(1, "day") : d).set("hour", 17).valueOf(),
     periodInMinutes: dayjs.duration(24, "hours").asMinutes(),
   });
   browser.alarms.onAlarm.addListener((alarm) => {

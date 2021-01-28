@@ -1,15 +1,18 @@
 import Color from "color";
 import { browser } from "webextension-polyfill-ts";
 import {
+  Action,
   ANALYSE_TEXT,
   GRAB_AND_ANALYSE,
   INIT_ANALYSIS,
   PUSH_CONTENT_CONFIG,
+  PUSH_NOTIFICATION,
   STATE_CONNECT,
 } from "../commons/messages";
 import { ContentConfig, TabState } from "../commons/typedefs";
 import getMainTextBody, { ElementText } from "../utils/browser/getMainTextBody";
 import computeColorHex from "../utils/computeColorHex";
+import snackbar from "./snackbar";
 import StatisticsManager from "./StatisticsManager";
 
 const MIN_LENGTH = 1000;
@@ -95,7 +98,7 @@ function monkeyPatchUrlHistoryToDetectUrlChanges() {
 
 monkeyPatchUrlHistoryToDetectUrlChanges();
 
-browser.runtime.onMessage.addListener(async (message, sender) => {
+browser.runtime.onMessage.addListener(async (message: Action, sender) => {
   if (sender.tab) {
     return;
   } else {
@@ -104,6 +107,15 @@ browser.runtime.onMessage.addListener(async (message, sender) => {
       case GRAB_AND_ANALYSE:
         await analysePage();
         break;
+      case PUSH_NOTIFICATION: {
+        const { payload } = message;
+        if (typeof payload === "string") {
+          const msg = payload;
+          snackbar.display(msg);
+        } else {
+          console.error("Unknown message.", payload);
+        }
+      }
     }
   }
 });
