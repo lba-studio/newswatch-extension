@@ -40,8 +40,8 @@ module.exports = (env, argv) => {
       content_scripts: [
         {
           matches: ["<all_urls>"],
-          js: ["bootstrap.bundle.min.js", "content.js"],
-          css: ["bootstrap.min.css", "content.css"],
+          js: ["content.js"],
+          css: ["content.css"],
           run_at: "document_idle",
         },
       ],
