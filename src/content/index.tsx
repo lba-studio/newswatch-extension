@@ -6,14 +6,15 @@ import {
   GRAB_AND_ANALYSE,
   INIT_ANALYSIS,
   PUSH_CONTENT_CONFIG,
-  PUSH_NOTIFICATION,
   STATE_CONNECT,
 } from "../commons/messages";
 import { ContentConfig, TabState } from "../commons/typedefs";
 import getMainTextBody, { ElementText } from "../utils/browser/getMainTextBody";
 import computeColorHex from "../utils/computeColorHex";
-import snackbar from "./snackbar";
 import StatisticsManager from "./StatisticsManager";
+import ReactDOM from "react-dom";
+import React from "react";
+import Overlay from "./Overlay";
 
 const MIN_LENGTH = 1000;
 const statisticsManager = new StatisticsManager();
@@ -107,15 +108,6 @@ browser.runtime.onMessage.addListener(async (message: Action, sender) => {
       case GRAB_AND_ANALYSE:
         await analysePage();
         break;
-      case PUSH_NOTIFICATION: {
-        const { payload } = message;
-        if (typeof payload === "string") {
-          const msg = payload;
-          snackbar.display(msg);
-        } else {
-          console.error("Unknown message.", payload);
-        }
-      }
     }
   }
 });
@@ -151,3 +143,8 @@ async function analysePage(): Promise<void> {
     }, 3000)
   );
 }
+
+const overlayEl = document.createElement("div");
+overlayEl.id = "zenti-overlay";
+document.body.append(overlayEl);
+ReactDOM.render(<Overlay />, overlayEl);

@@ -82,7 +82,7 @@ module.exports = (env, argv) => {
     mode: "development",
     entry: {
       background: "./src/background/index.ts",
-      content: "./src/content/index.ts",
+      content: "./src/content/index.tsx",
       popup: "./src/frontend/popup/index.tsx",
       option: "./src/frontend/option/index.tsx",
     },

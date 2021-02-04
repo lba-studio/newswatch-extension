@@ -130,6 +130,7 @@ async function statefulMessageHandler(req: Action, sender: { tab?: Tabs.Tab }) {
         console.warn("No tab-handler for action", type, req);
       case GRAB_AND_ANALYSE:
       case PAGE_HEARTBEAT:
+      case "SIGN_CONNECT": // used by ExtensionReloader
         isUnknownAction = true;
         break;
     }
