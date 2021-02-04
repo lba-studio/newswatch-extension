@@ -34,7 +34,7 @@ async function parseToken(token?: string): Promise<User | undefined> {
     try {
       await refreshAuth();
     } catch (e) {
-      console.error("Authentication expired. Please sign in again.");
+      console.error("Authentication expired. Please sign in again.", e);
       await removeToken().catch(console.error);
     }
     return undefined;
