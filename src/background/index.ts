@@ -130,6 +130,7 @@ async function statefulMessageHandler(req: Action, sender: { tab?: Tabs.Tab }) {
         console.warn("No tab-handler for action", type, req);
       case GRAB_AND_ANALYSE:
       case PAGE_HEARTBEAT:
+      case "SIGN_CONNECT": // used by ExtensionReloader
         isUnknownAction = true;
         break;
     }
@@ -165,10 +166,9 @@ async function commandMessageHandlers(req: Action, sender: { tab?: Tabs.Tab }) {
       if (
         typeof hostname === "string" &&
         typeof firstHeartbeat === "boolean" &&
-        typeof path === "string" &&
-        sender.tab
+        typeof path === "string"
       ) {
-        heartbeatManager.heartbeat(hostname, sender.tab, path, firstHeartbeat);
+        heartbeatManager.heartbeat(hostname, currentTab, path, firstHeartbeat);
       } else {
         console.error(
           `Unknown payload for ${PAGE_HEARTBEAT}, or cannot get sender tab. Skipping.`,
@@ -240,7 +240,3 @@ browser.contextMenus.create({
 insightService.setup();
 
 authRefreshService.init();
-
-// setTimeout(() => {
-//   insightService.collectInsights();
-// }, 3000);

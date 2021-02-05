@@ -9,6 +9,7 @@ export const STATE_CONNECT = "STATE_CONNECT";
 export const ANALYSE_TEXT_ERROR = "ANALYSE_TEXT_ERROR";
 export const PUSH_CONTENT_CONFIG = "CONTENT_PUSH_CONFIG";
 export const PAGE_HEARTBEAT = "PAGE_HEARTBEAT";
+export const PUSH_NOTIFICATION = "PUSH_NOTIFICATION";
 export interface Action<T = any> {
   type: string;
   payload?: T;

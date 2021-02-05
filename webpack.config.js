@@ -7,7 +7,6 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const GenerateJsonPlugin = require("generate-json-webpack-plugin");
 const ExtensionReloader = require("webpack-extension-reloader");
 const dotenv = require("dotenv");
-const webpack = require("webpack");
 
 dotenv.config();
 
@@ -42,6 +41,7 @@ module.exports = (env, argv) => {
         {
           matches: ["<all_urls>"],
           js: ["content.js"],
+          run_at: "document_idle",
         },
       ],
       browser_action: {
@@ -62,7 +62,7 @@ module.exports = (env, argv) => {
         48: "favicon.png",
         128: "favicon.png",
       },
-      persistent: argv.mode !== "production",
+      // persistent: argv.mode !== "production",
     }),
   ];
   if (argv.mode !== "production") {
@@ -81,7 +81,7 @@ module.exports = (env, argv) => {
     mode: "development",
     entry: {
       background: "./src/background/index.ts",
-      content: "./src/content/index.ts",
+      content: "./src/content/index.tsx",
       popup: "./src/frontend/popup/index.tsx",
       option: "./src/frontend/option/index.tsx",
     },

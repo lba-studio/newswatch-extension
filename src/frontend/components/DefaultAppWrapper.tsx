@@ -1,7 +1,7 @@
 import { CssBaseline, MuiThemeProvider } from "@material-ui/core";
 import React from "react";
 import ConfigContext, { globalTabFallbackPromise } from "./ConfigContext";
-import { appTheme } from "../styles";
+import { appTheme } from "../../commons/styles";
 import AuthContextProvider from "../auth/AuthContextProvider";
 
 interface DefaultAppWrapperProps {

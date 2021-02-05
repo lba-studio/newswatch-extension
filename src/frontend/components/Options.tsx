@@ -1,4 +1,11 @@
-import { Grid, LinearProgress, Switch, Typography } from "@material-ui/core";
+import {
+  Box,
+  Button,
+  Grid,
+  LinearProgress,
+  Switch,
+  Typography,
+} from "@material-ui/core";
 import React from "react";
 import { browser } from "webextension-polyfill-ts";
 import {
@@ -7,10 +14,12 @@ import {
   STATE_CONNECT,
 } from "../../commons/messages";
 import { ContentConfig, TabState } from "../../commons/typedefs";
+import AuthContext from "../auth/AuthContext";
 import ConfigContext from "./ConfigContext";
 
 function Options() {
   const configContext = React.useContext(ConfigContext);
+  const { user, logout } = React.useContext(AuthContext);
   const [contentConfig, setContentConfig] = React.useState<ContentConfig>({
     highlightSelectedText: false,
   });
@@ -47,11 +56,11 @@ function Options() {
     <>
       <Grid container justify="center">
         {!isLoading ? (
-          <>
-            <Grid container alignContent="center" item xs={9}>
+          <Grid container item xs={12} direction="row" alignItems="center">
+            <Box flex="1 1">
               <Typography>View analyzed text</Typography>
-            </Grid>
-            <Grid container justify="center" item xs={3}>
+            </Box>
+            <Box flex="0 0">
               <Switch
                 color="primary"
                 checked={contentConfig.highlightSelectedText}
@@ -62,13 +71,26 @@ function Options() {
                 }
                 name="textHighlight"
               />
-            </Grid>
-          </>
+            </Box>
+          </Grid>
         ) : (
           <Grid item xs={12}>
             <LinearProgress />
           </Grid>
         )}
+        <Grid container justify="flex-end" item xs={12}>
+          <Button
+            color="primary"
+            onClick={() => browser.runtime.openOptionsPage()}
+          >
+            Options
+          </Button>
+          {user && (
+            <Button color="primary" onClick={() => logout()}>
+              Logout
+            </Button>
+          )}
+        </Grid>
       </Grid>
     </>
   );

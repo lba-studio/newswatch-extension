@@ -31,8 +31,12 @@ async function parseToken(token?: string): Promise<User | undefined> {
   }
   const expiry = Number(decodedBody.exp);
   if (new Date().valueOf() / 1000 > expiry) {
-    console.error("Authentication expired. Please sign in again.");
-    await removeToken().catch(console.error);
+    try {
+      await refreshAuth();
+    } catch (e) {
+      console.error("Authentication expired. Please sign in again.", e);
+      await removeToken().catch(console.error);
+    }
     return undefined;
   }
   return {
