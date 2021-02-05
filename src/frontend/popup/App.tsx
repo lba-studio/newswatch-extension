@@ -1,4 +1,11 @@
-import { Divider, Grid, makeStyles, Typography } from "@material-ui/core";
+import {
+  Box,
+  Button,
+  Divider,
+  Grid,
+  makeStyles,
+  Typography,
+} from "@material-ui/core";
 import React from "react";
 import Options from "../components/Options";
 import StatisticsView from "../components/StatisticsView";
@@ -16,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function () {
-  const { user } = React.useContext(AuthContext);
+  const { user, launchWebAuthFlow } = React.useContext(AuthContext);
   const classes = useStyles();
   return (
     <DefaultAppWrapper>
@@ -27,11 +34,19 @@ export default function () {
         alignItems="center"
         justify="center"
       >
-        <Grid item xs={12}>
-          <Typography align="center" variant="h1">
-            {getGreeting(user?.name)}
-          </Typography>
+        <Grid container direction="row" alignItems="center" item xs={12}>
+          <Box flex="1 1">
+            <Typography align="center" variant="h1">
+              {getGreeting(user?.name)}
+            </Typography>
+          </Box>
+          {!user && (
+            <Button color="primary" onClick={() => launchWebAuthFlow()}>
+              Login
+            </Button>
+          )}
         </Grid>
+
         <Grid item xs={12}>
           <PageSentimentView />
         </Grid>
