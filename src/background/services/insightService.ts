@@ -9,6 +9,10 @@ const ALARM_KEY = "ALARM_INSIGHT";
 
 dayjs.extend(duration);
 
+interface IAlarmData {
+  lastRunDate: number;
+}
+
 async function collectInsights(): Promise<void> {
   console.debug("Collecting insights...");
   const currentDate = new Date();
@@ -47,16 +51,27 @@ function setup(): void {
     return;
   }
   isInitialised = true;
-  const d = dayjs();
   browser.alarms.create(ALARM_KEY, {
-    when: (d.hour() >= 17 ? d.add(1, "day") : d).set("hour", 17).valueOf(),
-    periodInMinutes: dayjs.duration(24, "hours").asMinutes(),
+    when: new Date().valueOf(),
+    periodInMinutes: 1,
   });
-  browser.alarms.onAlarm.addListener((alarm) => {
+  browser.alarms.onAlarm.addListener(async (alarm) => {
     if (alarm.name !== ALARM_KEY) {
       return;
     }
-    collectInsights();
+    const alarmData: Partial<IAlarmData> =
+      (await browser.storage.local.get(ALARM_KEY))[ALARM_KEY] || {};
+    const d = dayjs();
+    if (
+      !(
+        alarmData?.lastRunDate && d.isSame(dayjs(alarmData.lastRunDate), "day")
+      ) &&
+      d.hour() >= 17
+    ) {
+      collectInsights();
+      alarmData.lastRunDate = d.valueOf();
+    }
+    await browser.storage.local.set({ [ALARM_KEY]: alarmData });
   });
 }
 

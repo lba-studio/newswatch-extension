@@ -52,7 +52,7 @@ class PageHeartbeatManager {
     browser.tabs.onRemoved.addListener((tabId) => {
       this.tabActivityInfoMap.delete(tabId);
     });
-    browser.alarms.onAlarm.addListener(({ name }) => {
+    browser.alarms.onAlarm.addListener(async ({ name }) => {
       const nameTokens = name.split(ALARM_DELIMITER);
       if (
         nameTokens.length === 2 &&
@@ -65,6 +65,7 @@ class PageHeartbeatManager {
         }
         activityInfo.activeTimeOnSite = 0;
         this.tabActivityInfoMap.set(tabId, activityInfo);
+        await browser.alarms.clear(name);
       }
     });
   }
@@ -98,6 +99,7 @@ class PageHeartbeatManager {
     this.tabActivityInfoMap.set(getTabId(currentTab), activityInfo);
     browser.alarms.create(alarmLabel, {
       when: dayjs().add(1, "minute").valueOf(),
+      periodInMinutes: 1, // because if the "when" window is missed, the alarm does not trigger at all, so we poll it here
     });
   }
 

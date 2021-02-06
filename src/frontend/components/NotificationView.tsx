@@ -31,7 +31,7 @@ function NotificationView() {
     <Box display="flex" flexDirection="column">
       {notifications ? (
         notifications.reverse().map((notification) => (
-          <Card className={classes.insightCard}>
+          <Card key={notification.timestamp} className={classes.insightCard}>
             <Box display="flex" alignItems="center">
               <Box flex="1 1" p={1}>
                 <Typography variant="subtitle2">

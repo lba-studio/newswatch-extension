@@ -19,7 +19,6 @@ import TabStateManager from "./TabStateManager";
 import PageHeartbeatManager from "./HeartbeatManager";
 import sentimentSiteDataRepository from "../repositories/sentimentSiteDataRepository";
 import insightService from "./services/insightService";
-import authRefreshService from "./services/authRefreshService";
 import authService from "../services/auth.service";
 
 const stateManager = new TabStateManager();
@@ -238,5 +237,3 @@ browser.contextMenus.create({
 });
 
 insightService.setup();
-
-authRefreshService.init();
