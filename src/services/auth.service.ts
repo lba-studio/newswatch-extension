@@ -49,6 +49,7 @@ async function getToken(): Promise<string | undefined> {
   const token = (await browser.storage.local.get(LOGIN_TOKEN_KEY))[
     LOGIN_TOKEN_KEY
   ];
+  await parseToken(token);
   return token;
 }
 
