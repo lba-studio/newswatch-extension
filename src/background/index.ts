@@ -182,6 +182,7 @@ async function commandMessageHandlers(req: Action, sender: { tab?: Tabs.Tab }) {
     case INIT_ANALYSIS:
     case ANALYSE_TEXT:
     case PUSH_CONTENT_CONFIG:
+    case "SIGN_CONNECT": // used by ExtensionReloader
       break;
   }
 }
