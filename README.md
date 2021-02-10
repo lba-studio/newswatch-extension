@@ -6,6 +6,12 @@ We aim to make you understand how your browsing habit affects you mentally.
 
 The extension is currently being reviewed by the Chrome Web Store team. I'll update the README when it is published in Chrome Web Store.
 
+_That being said_, if you're keen on trying out the latest build:
+
+1. Download the latest build from (https://github.com/lba-studio/zenti/releases/latest/download/zenti.zip)
+2. Unzip
+3. Load the content you just unzipped as [an unpacked extension](https://developer.chrome.com/docs/extensions/mv2/getstarted/#manifest).
+
 # Getting started
 
 **This extension is currently under closed beta with families and friends. Message me if you want an invite!**
@@ -18,6 +24,4 @@ Since the extension ID (and hence the app's URL) changes for every installation,
 npm start
 ```
 
-After everything is compiled, load `/dist` as [an unpacked extension](https://developer.chrome.com/docs/extensions/mv2/getstarted/).
-
-:)
+After everything is compiled, load `/dist` as [an unpacked extension](https://developer.chrome.com/docs/extensions/mv2/getstarted/#manifest).
