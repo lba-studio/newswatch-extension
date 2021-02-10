@@ -19,3 +19,5 @@ npm start
 ```
 
 After everything is compiled, load `/dist` as [an unpacked extension](https://developer.chrome.com/docs/extensions/mv2/getstarted/).
+
+:)
