@@ -31,7 +31,7 @@ module.exports = (env, argv) => {
       template: "./src/frontend/index-template.html",
     }),
     new GenerateJsonPlugin("manifest.json", {
-      name: "Zenti",
+      name: `Zenti${argv.mode !== "production" ? " LOCALDEV" : ""}`,
       version: packageJson.version,
       manifest_version: 2,
       description:
@@ -104,12 +104,12 @@ module.exports = (env, argv) => {
       path: path.resolve(__dirname, "dist"),
     },
   };
-  if (argv.mode === "production") {
-    config.optimization = {
-      splitChunks: {
-        chunks: "all",
-      },
-    };
-  }
+  // if (argv.mode === "production") {
+  //   config.optimization = {
+  //     splitChunks: {
+  //       chunks: "all",
+  //     },
+  //   };
+  // }
   return config;
 };
