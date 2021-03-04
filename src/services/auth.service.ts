@@ -34,7 +34,12 @@ async function parseToken(token?: string): Promise<User | undefined> {
     try {
       await refreshAuth();
     } catch (e) {
-      console.error("Authentication expired. Please sign in again.", e);
+      console.error(
+        "Authentication expired and cannot be renewed. Please sign in again.",
+        axios.isAxiosError(e)
+          ? `${e.code}: ${JSON.stringify(e.response?.data)}`
+          : e
+      );
       await removeToken().catch(console.error);
     }
     return undefined;
@@ -134,7 +139,7 @@ async function refreshAuth(): Promise<void> {
     REFRESH_TOKEN_KEY
   ];
   if (!refreshToken) {
-    console.error("Cannot refresh auth: no refresh token.");
+    throw new Error("Cannot refresh auth: no refresh token.");
   }
   const resp = await axios
     .post(TOKEN_URL, {
